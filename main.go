@@ -1,6 +1,6 @@
 package main
 
-import "github.com/fynxlabs/ontap/cmd"
+import "github.com/freehold-digital/ontap/cmd"
 
 func main() {
 	cmd.Execute()

@@ -53,34 +53,34 @@ OnTap is distributed through various package managers for easy installation:
 
 ```bash
 # Homebrew (macOS and Linux)
-brew install fynxlabs/brew-tap/ontap
+brew install freehold-digital/brew-tap/ontap
 
 # Debian/Ubuntu
-curl -L https://github.com/fynxlabs/ontap/releases/latest/download/ontap_Linux_x86_64.deb -o ontap.deb
+curl -L https://github.com/freehold-digital/ontap/releases/latest/download/ontap_Linux_x86_64.deb -o ontap.deb
 sudo dpkg -i ontap.deb
 
 # RPM-based (Fedora, RHEL, etc.)
-curl -L https://github.com/fynxlabs/ontap/releases/latest/download/ontap_Linux_x86_64.rpm -o ontap.rpm
+curl -L https://github.com/freehold-digital/ontap/releases/latest/download/ontap_Linux_x86_64.rpm -o ontap.rpm
 sudo rpm -i ontap.rpm
 
 # Alpine Linux
-curl -L https://github.com/fynxlabs/ontap/releases/latest/download/ontap_Linux_x86_64.apk -o ontap.apk
+curl -L https://github.com/freehold-digital/ontap/releases/latest/download/ontap_Linux_x86_64.apk -o ontap.apk
 sudo apk add --allow-untrusted ontap.apk
 
 # Arch Linux
-curl -L https://github.com/fynxlabs/ontap/releases/latest/download/ontap_Linux_x86_64.pkg.tar.zst -o ontap.pkg.tar.zst
+curl -L https://github.com/freehold-digital/ontap/releases/latest/download/ontap_Linux_x86_64.pkg.tar.zst -o ontap.pkg.tar.zst
 sudo pacman -U ontap.pkg.tar.zst
 ```
 
 ### Direct Download
 
-You can download pre-built binaries for your platform from the [releases page](https://github.com/fynxlabs/ontap/releases).
+You can download pre-built binaries for your platform from the [releases page](https://github.com/freehold-digital/ontap/releases).
 
 ### Building from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/fynxlabs/ontap.git
+git clone https://github.com/freehold-digital/ontap.git
 cd ontap
 
 # Using mise (recommended)

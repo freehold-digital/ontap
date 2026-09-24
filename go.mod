@@ -1,4 +1,4 @@
-module github.com/fynxlabs/ontap
+module github.com/freehold-digital/ontap
 
 go 1.24.0
 

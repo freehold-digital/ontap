@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/log"
-	"github.com/fynxlabs/ontap/internal/pkg/openapi"
+	"github.com/freehold-digital/ontap/internal/pkg/openapi"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 )
 

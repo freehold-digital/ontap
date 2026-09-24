@@ -1,4 +1,4 @@
-module github.com/fynxlabs/ontap/examples/demo/api
+module github.com/freehold-digital/ontap/examples/demo/api
 
 go 1.24.0
 

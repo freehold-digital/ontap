@@ -1,17 +1,36 @@
 #:schema https://mise.jdx.dev/schema/mise.json
 min_version = "2024.1.1"
 
+[settings]
+experimental = true
+
 [env]
 # Environment variables for the project
 BINARY_NAME = "ontap"
+HK_MISE = "1"
 # For dynamic values, we'll use the shell directly in the tasks
-LDFLAGS = "-ldflags \"-X github.com/fynxlabs/ontap/cmd.Version=$(git describe --tags --always --dirty 2>/dev/null || echo \"dev\") -X github.com/fynxlabs/ontap/cmd.BuildTime=$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")\""
+LDFLAGS = "-ldflags \"-X github.com/freehold-digital/ontap/cmd.Version=$(git describe --tags --always --dirty 2>/dev/null || echo \"dev\") -X github.com/freehold-digital/ontap/cmd.BuildTime=$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")\""
 
 [tools]
 go = "latest"
 goreleaser = "latest"
 golangci-lint = "latest"
 docker-compose = "latest"
+hk = "latest"
+"npm:@fission-ai/openspec" = "latest"
+
+[hooks]
+postinstall = """
+  hk install --mise || true
+  if [ ! -d openspec ]; then
+    openspec init --tools claude || true
+  else
+    openspec update || true
+  fi
+  # Pre-stage so `mise install` leaves a build-ready tree.
+  go mod download || true
+  command -v govulncheck >/dev/null 2>&1 || go install golang.org/x/vuln/cmd/govulncheck@latest || true
+"""
 
 [tasks]
 # Default task runs build
@@ -43,12 +62,20 @@ fi
 """
 
 [tasks.install]
-description = "Install the binary"
+description = "Install ontap to /usr/local/bin (linux/macos); errors on windows"
 depends = ["build"]
 run = """
 #!/usr/bin/env bash
-echo "Installing {{env.BINARY_NAME}}..."
-install -m755 {{env.BINARY_NAME}} /usr/local/bin/{{env.BINARY_NAME}}
+case "$(uname -s)" in
+  Linux|Darwin)
+    install -m755 {{env.BINARY_NAME}} /usr/local/bin/{{env.BINARY_NAME}}
+    echo "installed: /usr/local/bin/{{env.BINARY_NAME}}"
+    ;;
+  *)
+    echo "install: not implemented for $(uname -s)" >&2
+    exit 1
+    ;;
+esac
 """
 
 [tasks.uninstall]
@@ -197,3 +224,29 @@ echo "OpenAPI Specs:"
 echo "- URL-based: http://localhost:8080/openapi.json"
 echo "- File-based: $(pwd)/api/openapi.json"
 """
+
+[tasks.format]
+description = "Format Go source with gofmt"
+run = "go fmt ./..."
+
+[tasks.fmt]
+depends = ["format"]
+
+[tasks.update]
+description = "Update Go module dependencies (go get -u + go mod tidy)"
+run = """
+go get -u ./...
+go mod tidy
+"""
+
+[tasks.start]
+description = "Build and run ontap (alias for `run`)"
+depends = ["run"]
+
+[tasks.security]
+description = "Scan Go dependencies for known CVEs (govulncheck — staged by postinstall)"
+run = "govulncheck ./..."
+
+[tasks.ci]
+description = "Run the full CI check locally (lint + test + security)"
+depends = ["lint", "test", "security"]
